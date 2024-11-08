@@ -3,10 +3,15 @@ import { GameStatus, type Pokemon, type PokemonListResponse } from '../interface
 import { pokemonApi } from '../api/pokemonApi';
 
 export const usePokemonGame = () => {
+  //
   const gameStatus = ref<GameStatus>(GameStatus.Playing);
   const pokemons = ref<Pokemon[]>([]);
   const pokemonsOptions = ref<Pokemon[]>([]);
 
+  const randomPokemon = computed(() => {
+    const randomIndex = Math.floor(Math.random() * pokemonsOptions.value.length);
+    return pokemonsOptions.value[randomIndex];
+  });
   const isLoading = computed(() => pokemons.value.length === 0);
 
   const getPokemons = async (): Promise<Pokemon[]> => {
@@ -27,6 +32,7 @@ export const usePokemonGame = () => {
     gameStatus.value = GameStatus.Playing;
     pokemonsOptions.value = pokemons.value.slice(0, howMany);
     pokemons.value = pokemons.value.slice(howMany);
+
     console.log(pokemonsOptions.value);
   };
 
@@ -37,6 +43,7 @@ export const usePokemonGame = () => {
 
   return {
     pokemonsOptions,
+    randomPokemon,
     gameStatus,
     isLoading,
     getNextOptions,
